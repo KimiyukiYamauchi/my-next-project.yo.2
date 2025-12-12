@@ -8,12 +8,17 @@ type Props = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{ dk?: string }>;
 };
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   // params は Promise なので await する必要がある
   const resolvedParams = await params;
-  const data = await getNewsDetail(resolvedParams.slug).catch(notFound);
+  const resolvedsearchParams = await searchParams;
+
+  const data = await getNewsDetail(resolvedParams.slug, {
+    draftKey: resolvedsearchParams.dk,
+  }).catch(notFound);
 
   return (
     <>
